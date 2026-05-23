@@ -13,53 +13,12 @@ const itinerarySchema = new mongoose.Schema(
       required: true,
       default: "My Travel Itinerary",
     },
-    // Raw extracted text from uploaded documents
     extractedData: {
       type: String,
     },
-    // AI-generated itinerary stored as structured JSON
     itinerary: {
-      summary: String,
-      destination: String,
-      travelDates: String,
-      days: [
-        {
-          day: Number,
-          date: String,
-          title: String,
-          activities: [
-            {
-              time: String,
-              activity: String,
-              details: String,
-              type: String, // flight, hotel, sightseeing, food, transport
-            },
-          ],
-        },
-      ],
-      flights: [
-        {
-          flightNumber: String,
-          airline: String,
-          from: String,
-          to: String,
-          departure: String,
-          arrival: String,
-          pnr: String,
-        },
-      ],
-      hotels: [
-        {
-          name: String,
-          checkIn: String,
-          checkOut: String,
-          confirmationNumber: String,
-          address: String,
-        },
-      ],
-      tips: [String],
+      type: mongoose.Schema.Types.Mixed
     },
-    // Unique share token for public sharing
     shareToken: {
       type: String,
       default: () => uuidv4(),
@@ -72,7 +31,7 @@ const itinerarySchema = new mongoose.Schema(
     uploadedFiles: [
       {
         originalName: String,
-        fileType: String, // pdf or image
+        fileType: String,
       },
     ],
   },

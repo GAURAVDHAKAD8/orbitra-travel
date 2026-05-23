@@ -17,7 +17,9 @@ const extractTextFromPDF = async (filePath) => {
  * Extract text/data from an image using Gemini Vision
  */
 const extractTextFromImage = async (filePath, mimeType) => {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+  });
 
   const imageData = fs.readFileSync(filePath);
   const base64Image = imageData.toString("base64");
@@ -39,7 +41,9 @@ const extractTextFromImage = async (filePath, mimeType) => {
  * Generate a structured travel itinerary from extracted text
  */
 const generateItinerary = async (extractedText) => {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+  });
 
   const prompt = `
 You are a smart travel assistant. Based on the following travel booking information extracted from documents, generate a detailed, structured travel itinerary.
