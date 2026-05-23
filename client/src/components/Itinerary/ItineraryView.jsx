@@ -3,11 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   MapPin, Calendar, Plane, Hotel, Clock, Globe, Lock,
-  Share2, Copy, ArrowLeft, Loader2, Lightbulb, ChevronDown, ChevronUp
+  Share2, Copy, ArrowLeft, Loader2, Lightbulb, ChevronDown, ChevronUp, Image
 } from "lucide-react";
 import api from "../../api/axios";
+import { fetchPlaceImage } from "../../api/unsplash";
 
-// Activity type to color/icon mapping
 const activityStyles = {
   flight: { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200", label: "Flight" },
   hotel: { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200", label: "Hotel" },
@@ -32,16 +32,32 @@ const ItineraryView = () => {
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
   const [expandedDays, setExpandedDays] = useState({});
+  const [coverImage, setCoverImage] = useState(null);
+  const [dayImages, setDayImages] = useState({});
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchData = async () => {
       try {
         const res = await api.get(`/itinerary/${id}`);
         setItinerary(res.data);
-        // Expand first day by default
+
         if (res.data.itinerary?.days?.length > 0) {
           setExpandedDays({ 0: true });
         }
+
+        // Fetch cover image for destination
+        if (res.data.itinerary?.destination) {
+          fetchPlaceImage(res.data.itinerary.destination).then(setCoverImage);
+        }
+
+        // Fetch image for each day
+        res.data.itinerary?.days?.forEach((day, index) => {
+          const query = `${day.title} ${res.data.itinerary.destination}`;
+          fetchPlaceImage(query).then((img) => {
+            setDayImages((prev) => ({ ...prev, [index]: img }));
+          });
+        });
+
       } catch {
         toast.error("Itinerary not found");
         navigate("/dashboard");
@@ -49,7 +65,7 @@ const ItineraryView = () => {
         setLoading(false);
       }
     };
-    fetch();
+    fetchData();
   }, [id]);
 
   const toggleDay = (index) => {
@@ -97,6 +113,17 @@ const ItineraryView = () => {
       >
         <ArrowLeft className="w-4 h-4" /> Back to Dashboard
       </button>
+
+      {/* Cover Image */}
+      {coverImage && (
+        <div className="mb-4 rounded-2xl overflow-hidden h-52 w-full">
+          <img
+            src={coverImage}
+            alt={data?.destination}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
 
       {/* Hero header */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 md:p-8 text-white mb-6">
@@ -157,6 +184,22 @@ const ItineraryView = () => {
 
           {data?.days?.map((day, index) => (
             <div key={index} className="card overflow-hidden p-0">
+
+              {/* Day image */}
+              {dayImages[index] ? (
+                <div className="h-36 w-full overflow-hidden">
+                  <img
+                    src={dayImages[index]}
+                    alt={day.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="h-36 w-full bg-gradient-to-r from-blue-50 to-indigo-100 flex items-center justify-center">
+                  <Image className="w-8 h-8 text-blue-200" />
+                </div>
+              )}
+
               {/* Day header */}
               <button
                 onClick={() => toggleDay(index)}

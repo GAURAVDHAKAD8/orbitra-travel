@@ -8,6 +8,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import UploadZone from "./components/Upload/UploadZone";
 import ItineraryView from "./components/Itinerary/ItineraryView";
 import SharedItinerary from "./components/Itinerary/SharedItinerary";
+import LandingPage from "./components/Layout/LandingPage";
 
 // Protected route wrapper
 const PrivateRoute = ({ children }) => {
@@ -34,7 +35,7 @@ function AppRoutes() {
     <div className="min-h-screen bg-gray-50">
       {user && <Navbar />}
       <Routes>
-        <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
+        <Route path="/" element={<LandingPage />} />
 
         <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
         <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
