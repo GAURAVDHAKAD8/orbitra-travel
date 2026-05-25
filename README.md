@@ -7,7 +7,7 @@ Upload your travel documents (flight tickets, hotel bookings) and get an AI-powe
 - **Frontend:** React + Vite + Tailwind CSS
 - **Backend:** Node.js + Express.js
 - **Database:** MongoDB + Mongoose
-- **AI:** Google Gemini 1.5 Flash
+- **AI:** Google Gemini 2.5 Flash
 - **Auth:** JWT
 - **Upload:** Multer + react-dropzone
 
